@@ -32,56 +32,43 @@ pip install -r requirements.txt
 
 Make sure to set your Hugging Face token in a .env file:
 HF_TOKEN=your_huggingface_token
+```
 
 
-🏋️‍♂️ Training
-python
-trainer.train()
-Training arguments include:
+## 🏋️‍♂️ Training
 
-100 epochs
+The model is fine-tuned using Hugging Face's `Trainer` API with PEFT (LoRA) for efficient adaptation. Below is a summary of the training setup:
 
-Batch size: 8
+### 🔧 Training Arguments
 
-Learning rate: 1e-4
+- **Epochs**: 100  
+- **Batch Size**: 8 (for both training and evaluation)  
+- **Learning Rate**: 1e-4  
+- **Evaluation Strategy**: Every 50 steps  
+- **Logging Steps**: Every 10 steps  
+- **Save Strategy**: Every 50 steps, keeping the 2 most recent checkpoints  
+- **Mixed Precision**: Enabled (`fp16=True`)  
+- **Push to Hub**: Enabled  
+- **Hub Model ID**: `ArijitMishra/t5_model_finetuned_github_tag_generator_from_local`  
+- **W&B Integration**: Enabled (`report_to="wandb"`)
 
-Evaluation every 50 steps
+### 🧪 Evaluation
 
-Model checkpointing and Hub push enabled
+- Validation split: 10%  
+- Metrics and logs tracked via [Weights & Biases](https://wandb.ai/)  
+- Best model saved and optionally pushed to Hugging Face Hub
 
-🔍 Tag Generation
-After training, use the pipeline to generate tags:
+### 🧬 LoRA Configuration
 
-python
-from transformers import pipeline
+- **Rank (r)**: 16  
+- **Alpha**: 16  
+- **Dropout**: 0.5  
+- **Target Modules**: `["q", "v"]`  
+- **Bias**: `"none"`  
+- **Task Type**: `SEQ_2_SEQ_LM`
 
-tag_generator = pipeline("text2text-generation", model="./t5_tag_generator", tokenizer="./t5_tag_generator")
+### 🧰 Data Collation
 
-def generate_tags(text):
-    output = tag_generator(text, num_beams=5, early_stopping=True)
-    decoded = output[0]["generated_text"]
-    return clean_and_deduplicate_tags(decoded)
-Example:
-
-python
-generate_tags("Best libraries for accessing NLP datasets and evaluation tools in Python.")
-# Output: nlp, datasets, evaluation, python, huggingface
-📊 Dataset
-Source: zamal/github-meta-data
-
-Format: JSON with input (repo description) and target (tags)
-
-🧪 Evaluation
-Validation split: 10%
-
-Metrics tracked via Weights & Biases
-
-Model saved and pushed to Hugging Face Hub: ArijitMishra/t5_model_finetuned_github_tag_generator_from_local
-
-📁 Output Directory
-Trained model and tokenizer are saved to:
-
-Code
-./t5_tag_generator
-🤝 Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
+```python
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
+```
