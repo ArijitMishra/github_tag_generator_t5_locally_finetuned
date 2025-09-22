@@ -1,0 +1,6 @@
+transformers
+datasets
+peft
+dotenv
+SentencePiece
+wandb

@@ -1,0 +1,5 @@
+wandb
+t5_tag_generator
+.env
+.venv
+github_tag_generator_with_t5_peft(lora).py:Zone.Identifier
