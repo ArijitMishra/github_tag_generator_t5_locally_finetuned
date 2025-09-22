@@ -1,35 +1,39 @@
-🚀 GitHub Tag Generator with T5 + PEFT (LoRA)
-This project fine-tunes a T5-small model using PEFT with LoRA (Low-Rank Adaptation) to automatically generate relevant tags for GitHub repository descriptions. It's designed to help developers and researchers organize, search, and recommend repositories more effectively.
+# 🚀 GitHub Tag Generator with T5 + PEFT (LoRA)
 
-📌 Features
-Fine-tuned on the zamal/github-meta-data dataset
+This project fine-tunes a [T5-small](https://huggingface.co/t5-small) model using [PEFT](https://github.com/huggingface/peft) with LoRA (Low-Rank Adaptation) to automatically generate relevant tags for GitHub repository descriptions. It's designed to help developers and researchers organize, search, and recommend repositories more effectively.
 
-Uses Hugging Face's Trainer API for training and evaluation
+---
 
-Implements LoRA via PEFT for efficient parameter tuning
+## 📌 Features
 
-Integrated with Weights & Biases for experiment tracking
+- Fine-tuned on the [zamal/github-meta-data](https://huggingface.co/datasets/zamal/github-meta-data) dataset  
+- Uses Hugging Face's `Trainer` API for training and evaluation  
+- Implements LoRA via PEFT for efficient parameter tuning  
+- Integrated with [Weights & Biases](https://wandb.ai/) for experiment tracking  
+- Pushes trained model to Hugging Face Hub  
+- Provides a simple tag generation pipeline using `transformers.pipeline`
 
-Pushes trained model to Hugging Face Hub
+---
 
-Provides a simple tag generation pipeline using transformers.pipeline
+## 🧠 Model Architecture
 
-🧠 Model Architecture
-Base Model: T5-small
+- **Base Model**: T5-small  
+- **PEFT Strategy**: LoRA with `r=16`, `alpha=16`, dropout `0.5`  
+- **Task Type**: Sequence-to-sequence (text2text-generation)
 
-PEFT Strategy: LoRA with r=16, alpha=16, dropout 0.5
+---
 
-Task Type: Sequence-to-sequence (text2text-generation)
+## 📦 Installation
 
-📦 Installation
-bash
+```bash
 git clone https://github.com/ArijitMishra/github_tag_generator_t5_locally_finetuned.git
 cd github_tag_generator_t5_locally_finetuned
 pip install -r requirements.txt
-Make sure to set your Hugging Face token in a .env file:
 
-Code
+Make sure to set your Hugging Face token in a .env file:
 HF_TOKEN=your_huggingface_token
+
+
 🏋️‍♂️ Training
 python
 trainer.train()
